@@ -3,7 +3,6 @@ import numpy as np
 import os, csv, random, gc, pickle
 import nibabel as nib
 
-
 """
 In seg file
 --------------
@@ -19,7 +18,7 @@ core: 1 4
 enhance: 4
 """
 ###============================= SETTINGS ===================================###
-DATA_SIZE = 'half' # (extrasmall, small, half, all)
+DATA_SIZE = 'extrasmall'  # (extrasmall, small, half, all)
 
 save_dir = "data/train_dev_all/"
 if not os.path.exists(save_dir):
@@ -31,7 +30,7 @@ survival_csv_path = "data/Brats17TrainingData/survival_data.csv"
 ###==========================================================================###
 
 survival_id_list = []
-survival_age_list =[]
+survival_age_list = []
 survival_peroid_list = []
 
 with open(survival_csv_path, 'r') as f:
@@ -42,23 +41,23 @@ with open(survival_csv_path, 'r') as f:
         survival_age_list.append(float(content[1]))
         survival_peroid_list.append(float(content[2]))
 
-print(len(survival_id_list)) #163
+print(len(survival_id_list))  # 163
 
 if DATA_SIZE == 'all':
     HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)
     LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)
 elif DATA_SIZE == 'half':
-    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:100]# DEBUG WITH SMALL DATA
-    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:30] # DEBUG WITH SMALL DATA
+    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:100]  # DEBUG WITH SMALL DATA
+    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:30]  # DEBUG WITH SMALL DATA
 elif DATA_SIZE == 'small':
-    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:50] # DEBUG WITH SMALL DATA
-    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:20] # DEBUG WITH SMALL DATA
+    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:50]  # DEBUG WITH SMALL DATA
+    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:20]  # DEBUG WITH SMALL DATA
 elif DATA_SIZE == 'extrasmall':
-    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:5]  # DEBUG WITH SMALL DATA
-    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:2]  # DEBUG WITH SMALL DATA
+    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:10]  # DEBUG WITH SMALL DATA
+    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:3]  # DEBUG WITH SMALL DATA
 else:
     exit("Unknow DATA_SIZE")
-print(len(HGG_path_list), len(LGG_path_list)) #210 #75
+print(len(HGG_path_list), len(LGG_path_list))  # 210 #75
 
 HGG_name_list = [os.path.basename(p) for p in HGG_path_list]
 LGG_name_list = [os.path.basename(p) for p in LGG_path_list]
@@ -73,7 +72,7 @@ for i in survival_id_list:
     else:
         print(i)
 
-print(len(survival_id_from_HGG), len(survival_id_from_LGG)) #163, 0
+print(len(survival_id_from_HGG), len(survival_id_from_LGG))  # 163, 0
 
 # use 42 from 210 (in 163 subset) and 15 from 75 as 0.8/0.2 train/dev split
 
@@ -83,41 +82,19 @@ index_LGG = list(range(0, len(LGG_name_list)))
 # random.shuffle(index_HGG)
 # random.shuffle(index_HGG)
 
-if DATA_SIZE == 'all':
-    dev_index_HGG = index_HGG[-84:-42]
-    test_index_HGG = index_HGG[-42:]
-    tr_index_HGG = index_HGG[:-84]
-    dev_index_LGG = index_LGG[-30:-15]
-    test_index_LGG = index_LGG[-15:]
-    tr_index_LGG = index_LGG[:-30]
-elif DATA_SIZE == 'half':
-    dev_index_HGG = index_HGG[-30:]  # DEBUG WITH SMALL DATA
-    test_index_HGG = index_HGG[-5:]
-    tr_index_HGG = index_HGG[:-30]
-    dev_index_LGG = index_LGG[-10:]  # DEBUG WITH SMALL DATA
-    test_index_LGG = index_LGG[-5:]
-    tr_index_LGG = index_LGG[:-10]
-elif DATA_SIZE == 'small':
-    dev_index_HGG = index_HGG[35:42]   # DEBUG WITH SMALL DATA
-    # print(index_HGG, dev_index_HGG)
-    # exit()
-    test_index_HGG = index_HGG[41:42]
-    tr_index_HGG = index_HGG[0:35]
-    dev_index_LGG = index_LGG[7:10]    # DEBUG WITH SMALL DATA
-    test_index_LGG = index_LGG[9:10]
-    tr_index_LGG = index_LGG[0:7]
-elif DATA_SIZE == 'extrasmall':
-    print(len(index_HGG))
-    print(len(index_LGG))
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA print")
-    dev_index_HGG = index_HGG[3:4]  # DEBUG WITH SMALL DATA
-    # print(index_HGG, dev_index_HGG)
-    # exit()
-    test_index_HGG = index_HGG[4:4]
-    tr_index_HGG = index_HGG[0:3]
-    dev_index_LGG = index_LGG[0:1]  # DEBUG WITH SMALL DATA
-    test_index_LGG = index_LGG[0:1]
-    tr_index_LGG = index_LGG[0:7]
+amount = len(index_HGG)
+tr_index_HGG = index_HGG[0:int(0.80 * amount)]  # 80%
+start = max(int(0.80 * amount), amount - int(0.20 * amount))
+dev_index_HGG = index_HGG[-1:] + index_HGG[start:-1]
+start = max(int(0.80 * amount), amount - int(0.10 * amount))
+test_index_HGG = index_HGG[-1:] + index_HGG[start:-1]
+
+amount = len(index_LGG)
+tr_index_LGG = index_LGG[0:int(0.70 * amount)]  # 70%
+start = max(int(0.70 * amount), amount - int(0.30 * amount))
+dev_index_LGG = index_LGG[-1:] + index_LGG[start:-1]  #
+start = max(int(0.70 * amount), amount - int(0.10 * amount))
+test_index_LGG = index_LGG[-1:] + index_LGG[start:-1]  #
 
 survival_id_dev_HGG = [survival_id_from_HGG[i] for i in dev_index_HGG]
 survival_id_test_HGG = [survival_id_from_HGG[i] for i in test_index_HGG]
@@ -145,7 +122,7 @@ data_types_mean_std_dict = {i: {'mean': 0.0, 'std': 1.0} for i in data_types}
 # preserving_ratio = 0.05 # 0.213 removed
 # preserving_ratio = 0.10 # 0.359 removed
 
-#==================== LOAD ALL IMAGES' PATH AND COMPUTE MEAN/ STD
+# ==================== LOAD ALL IMAGES' PATH AND COMPUTE MEAN/ STD
 for i in data_types:
     data_temp_list = []
     for j in HGG_name_list:
@@ -168,7 +145,6 @@ print(data_types_mean_std_dict)
 
 with open(save_dir + 'mean_std_dict.pickle', 'wb') as f:
     pickle.dump(data_types_mean_std_dict, f, protocol=4)
-
 
 ##==================== GET NORMALIZE IMAGES
 X_train_input = []
@@ -197,8 +173,10 @@ for i in survival_id_dev_HGG:
     seg_img = nib.load(seg_path).get_data()
     seg_img = np.transpose(seg_img, (1, 0, 2))
     for j in range(all_3d_data[0].shape[2]):
-        combined_array = np.stack((all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]), axis=2)
-        combined_array = np.transpose(combined_array, (1, 0, 2))#.tolist()
+        combined_array = np.stack(
+            (all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]),
+            axis=2)
+        combined_array = np.transpose(combined_array, (1, 0, 2))  # .tolist()
         combined_array.astype(np.float32)
         X_dev_input.append(combined_array)
 
@@ -239,8 +217,10 @@ for i in survival_id_dev_LGG:
     seg_img = nib.load(seg_path).get_data()
     seg_img = np.transpose(seg_img, (1, 0, 2))
     for j in range(all_3d_data[0].shape[2]):
-        combined_array = np.stack((all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]), axis=2)
-        combined_array = np.transpose(combined_array, (1, 0, 2))#.tolist()
+        combined_array = np.stack(
+            (all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]),
+            axis=2)
+        combined_array = np.transpose(combined_array, (1, 0, 2))  # .tolist()
         combined_array.astype(np.float32)
         X_dev_input.append(combined_array)
 
@@ -268,7 +248,7 @@ for i in survival_id_dev_LGG:
     print("finished {}".format(i))
 
 X_dev_input = np.asarray(X_dev_input, dtype=np.float32)
-X_dev_target = np.asarray(X_dev_target)#, dtype=np.float32)
+X_dev_target = np.asarray(X_dev_target)  # , dtype=np.float32)
 # print(X_dev_input.shape)
 # print(X_dev_target.shape)
 
@@ -293,8 +273,10 @@ for i in survival_id_tr_HGG:
     seg_img = nib.load(seg_path).get_data()
     seg_img = np.transpose(seg_img, (1, 0, 2))
     for j in range(all_3d_data[0].shape[2]):
-        combined_array = np.stack((all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]), axis=2)
-        combined_array = np.transpose(combined_array, (1, 0, 2))#.tolist()
+        combined_array = np.stack(
+            (all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]),
+            axis=2)
+        combined_array = np.transpose(combined_array, (1, 0, 2))  # .tolist()
         combined_array.astype(np.float32)
         X_train_input.append(combined_array)
 
@@ -321,7 +303,6 @@ for i in survival_id_tr_HGG:
     print("finished {}".format(i))
     # print(len(X_train_target))
 
-
 print(" LGG Train")
 for i in survival_id_tr_LGG:
     all_3d_data = []
@@ -336,8 +317,10 @@ for i in survival_id_tr_LGG:
     seg_img = nib.load(seg_path).get_data()
     seg_img = np.transpose(seg_img, (1, 0, 2))
     for j in range(all_3d_data[0].shape[2]):
-        combined_array = np.stack((all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]), axis=2)
-        combined_array = np.transpose(combined_array, (1, 0, 2))#.tolist()
+        combined_array = np.stack(
+            (all_3d_data[0][:, :, j], all_3d_data[1][:, :, j], all_3d_data[2][:, :, j], all_3d_data[3][:, :, j]),
+            axis=2)
+        combined_array = np.transpose(combined_array, (1, 0, 2))  # .tolist()
         combined_array.astype(np.float32)
         X_train_input.append(combined_array)
 
@@ -364,7 +347,7 @@ for i in survival_id_tr_LGG:
     print("finished {}".format(i))
 
 X_train_input = np.asarray(X_train_input, dtype=np.float32)
-X_train_target = np.asarray(X_train_target)#, dtype=np.float32)
+X_train_target = np.asarray(X_train_target)  # , dtype=np.float32)
 # print(X_train_input.shape)
 # print(X_train_target.shape)
 
@@ -372,7 +355,6 @@ X_train_target = np.asarray(X_train_target)#, dtype=np.float32)
 #     pickle.dump(X_train_input, f, protocol=4)
 # with open(save_dir + 'train_target.pickle', 'wb') as f:
 #     pickle.dump(X_train_target, f, protocol=4)
-
 
 
 # X_train_target_whole = np.asarray(X_train_target_whole)
@@ -392,7 +374,6 @@ X_train_target = np.asarray(X_train_target)#, dtype=np.float32)
 # print(X_dev_target_whole.shape)
 # print(X_dev_target_core.shape)
 # print(X_dev_target_enhance.shape)
-
 
 
 # with open(save_dir + 'train_target_whole.pickle', 'wb') as f:
