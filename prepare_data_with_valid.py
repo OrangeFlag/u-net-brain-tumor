@@ -19,7 +19,7 @@ core: 1 4
 enhance: 4
 """
 ###============================= SETTINGS ===================================###
-DATA_SIZE = 'half' # (small, half or all)
+DATA_SIZE = 'half' # (extrasmall, small, half, all)
 
 save_dir = "data/train_dev_all/"
 if not os.path.exists(save_dir):
@@ -53,6 +53,9 @@ elif DATA_SIZE == 'half':
 elif DATA_SIZE == 'small':
     HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:50] # DEBUG WITH SMALL DATA
     LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:20] # DEBUG WITH SMALL DATA
+elif DATA_SIZE == 'extrasmall':
+    HGG_path_list = tl.files.load_folder_list(path=HGG_data_path)[0:5]  # DEBUG WITH SMALL DATA
+    LGG_path_list = tl.files.load_folder_list(path=LGG_data_path)[0:2]  # DEBUG WITH SMALL DATA
 else:
     exit("Unknow DATA_SIZE")
 print(len(HGG_path_list), len(LGG_path_list)) #210 #75
@@ -102,6 +105,18 @@ elif DATA_SIZE == 'small':
     tr_index_HGG = index_HGG[0:35]
     dev_index_LGG = index_LGG[7:10]    # DEBUG WITH SMALL DATA
     test_index_LGG = index_LGG[9:10]
+    tr_index_LGG = index_LGG[0:7]
+elif DATA_SIZE == 'extrasmall':
+    print(len(index_HGG))
+    print(len(index_LGG))
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA print")
+    dev_index_HGG = index_HGG[3:4]  # DEBUG WITH SMALL DATA
+    # print(index_HGG, dev_index_HGG)
+    # exit()
+    test_index_HGG = index_HGG[4:4]
+    tr_index_HGG = index_HGG[0:3]
+    dev_index_LGG = index_LGG[0:1]  # DEBUG WITH SMALL DATA
+    test_index_LGG = index_LGG[0:1]
     tr_index_LGG = index_LGG[0:7]
 
 survival_id_dev_HGG = [survival_id_from_HGG[i] for i in dev_index_HGG]
