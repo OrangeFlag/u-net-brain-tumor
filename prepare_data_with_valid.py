@@ -188,22 +188,6 @@ for i in survival_id_dev_HGG:
         X_dev_input.append(combined_array)
 
         seg_2d = seg_img[:, :, j]
-        # whole = np.zeros_like(seg_2d)
-        # core = np.zeros_like(seg_2d)
-        # enhance = np.zeros_like(seg_2d)
-        # for index, x in np.ndenumerate(seg_2d):
-        #     if x == 1:
-        #         whole[index] = 1
-        #         core[index] = 1
-        #     if x == 2:
-        #         whole[index] = 1
-        #     if x == 4:
-        #         whole[index] = 1
-        #         core[index] = 1
-        #         enhance[index] = 1
-        # X_dev_target_whole.append(whole)
-        # X_dev_target_core.append(core)
-        # X_dev_target_enhance.append(enhance)
         seg_2d.astype(int)
         X_dev_target.append(seg_2d)
     del all_3d_data
@@ -230,22 +214,6 @@ for i in survival_id_dev_LGG:
         X_dev_input.append(combined_array)
 
         seg_2d = seg_img[:, :, j]
-        # whole = np.zeros_like(seg_2d)
-        # core = np.zeros_like(seg_2d)
-        # enhance = np.zeros_like(seg_2d)
-        # for index, x in np.ndenumerate(seg_2d):
-        #     if x == 1:
-        #         whole[index] = 1
-        #         core[index] = 1
-        #     if x == 2:
-        #         whole[index] = 1
-        #     if x == 4:
-        #         whole[index] = 1
-        #         core[index] = 1
-        #         enhance[index] = 1
-        # X_dev_target_whole.append(whole)
-        # X_dev_target_core.append(core)
-        # X_dev_target_enhance.append(enhance)
         seg_2d.astype(int)
         X_dev_target.append(seg_2d)
     del all_3d_data
@@ -284,22 +252,6 @@ for i in survival_id_tr_HGG:
         X_train_input.append(combined_array)
 
         seg_2d = seg_img[:, :, j]
-        # whole = np.zeros_like(seg_2d)
-        # core = np.zeros_like(seg_2d)
-        # enhance = np.zeros_like(seg_2d)
-        # for index, x in np.ndenumerate(seg_2d):
-        #     if x == 1:
-        #         whole[index] = 1
-        #         core[index] = 1
-        #     if x == 2:
-        #         whole[index] = 1
-        #     if x == 4:
-        #         whole[index] = 1
-        #         core[index] = 1
-        #         enhance[index] = 1
-        # X_train_target_whole.append(whole)
-        # X_train_target_core.append(core)
-        # X_train_target_enhance.append(enhance)
         seg_2d.astype(int)
         X_train_target.append(seg_2d)
     del all_3d_data
